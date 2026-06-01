@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد بیت‌کوین - Polymarket</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Luxon for date adapter -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.0/build/global/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+</head>
+<body>
+    <!-- هدر -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">₿</span>
+                <div>
+                    <h1>داشبورد بیت‌کوین</h1>
+                    <p class="subtitle">پیش‌بینی‌های Polymarket</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <span class="status-badge" id="statusBadge">
+                    <span class="status-dot"></span>
+                    متصل
+                </span>
+                <button class="btn btn-refresh" id="refreshBtn" onclick="refreshData()">
+                    🔄 بروزرسانی
+                </button>
+                <span class="last-update" id="lastUpdate">آخرین بروزرسانی: --</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- محتوای اصلی -->
+    <main class="main-content">
+        <!-- لودینگ -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loader">
+                <div class="loader-spinner"></div>
+                <p>در حال بارگذاری داده‌ها...</p>
+            </div>
+        </div>
+
+        <!-- کارت‌های آماری -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalMarkets">--</span>
+                    <span class="stat-label">کل بازارها</span>
+                </div>
+            </div>
+            <div class="stat-card active">
+                <div class="stat-icon">🟢</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="activeMarkets">--</span>
+                    <span class="stat-label">بازار فعال</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalVolume">--</span>
+                    <span class="stat-label">حجم کل معاملات</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💧</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="totalLiquidity">--</span>
+                    <span class="stat-label">نقدینگی کل</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- فیلترها -->
+        <section class="filters-bar">
+            <div class="filter-group">
+                <label>مرتب‌سازی:</label>
+                <select id="sortSelect" onchange="applyFilters()">
+                    <option value="volume">بیشترین حجم</option>
+                    <option value="liquidity">بیشترین نقدینگی</option>
+                    <option value="newest">جدیدترین</option>
+                    <option value="probability">بیشترین احتمال</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>وضعیت:</label>
+                <select id="statusSelect" onchange="applyFilters()">
+                    <option value="active">فعال</option>
+                    <option value="closed">بسته شده</option>
+                    <option value="all">همه</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <input type="text" id="searchInput" placeholder="🔍 جستجو در بازارها..." 
+                       oninput="filterBySearch()">
+            </div>
+        </section>
+
+        <!-- لیست بازارها -->
+        <section class="markets-section">
+            <h2 class="section-title">
+                بازارهای پیش‌بینی بیت‌کوین
+                <span class="market-count" id="marketCount">0</span>
+            </h2>
+            <div class="markets-grid" id="marketsGrid">
+                <!-- بازارها اینجا رندر می‌شوند -->
+            </div>
+        </section>
+
+        <!-- بازارهای برتر -->
+        <section class="top-markets-section">
+            <h2 class="section-title">🏆 بازارهای برتر بر اساس حجم معاملات</h2>
+            <div class="top-markets-list" id="topMarketsList">
+                <!-- رندر می‌شود -->
+            </div>
+        </section>
+    </main>
+
+    <!-- مودال جزئیات بازار -->
+    <div class="modal-overlay" id="marketModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div id="modalBody">
+                <!-- محتوای مودال -->
+            </div>
+        </div>
+    </div>
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <p>📊 داده‌ها از <a href="https://polymarket.com" target="_blank">Polymarket</a> 
+        | ⚡ بروزرسانی هر 60 ثانیه</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
